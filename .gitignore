@@ -2,7 +2,8 @@
 
 # Секреты доступа (токен Figma и пр.) — никогда не коммитим
 .env
-.env.*
+.env.local
+!.env.example
 
 # Backend
 backend/build/
@@ -15,6 +16,7 @@ mobile/.dart_tool/
 mobile/.packages
 mobile/.flutter-plugins
 mobile/.flutter-plugins-dependencies
+mobile/.fvm/flutter_sdk
 
 # IDE
 .idea/
@@ -27,4 +29,7 @@ Thumbs.db
 
 # Docker local overrides
 docker-compose.override.yml
+
+# Локальные временные файлы (e2e-smoke, кэш)
+.tmp/
 

@@ -1,62 +1,131 @@
 # Summer School 2026 — «Вертикаль» (SurfProjctClimbing)
 
-Monorepo: аналитика (`01-analysis/`), backend (Spring Boot + Kotlin), mobile (Flutter).
+Monorepo клиентского приложения скалодрома: аналитика, Spring Boot API, Flutter mobile.
 
-## Стек
+| Слой | Путь | Стек |
+|------|------|------|
+| Аналитика / OpenAPI | `01-analysis/` | Markdown, OpenAPI 3 |
+| Backend | `backend/` | Spring Boot 3, Kotlin, PostgreSQL, Flyway |
+| Mobile | `mobile/` | Flutter, dio, riverpod, go_router |
 
-| Слой | Технологии |
-|------|------------|
-| Mobile | Flutter (Dart), dio, riverpod |
-| Backend | Spring Boot 3, Kotlin, PostgreSQL, Flyway |
-| API-контракт | `01-analysis/api/` (OpenAPI 3) |
+Чеклист реализации: [`02-development/IMPLEMENTATION_CHECKLIST.md`](02-development/IMPLEMENTATION_CHECKLIST.md)
 
-Подробнее: [AnalyzePromts.md](AnalyzePromts.md)
+---
 
-## Быстрый старт (Docker)
+## Быстрый старт «с нуля»
+
+### 1. Требования
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (PostgreSQL + API)
+- JDK 21 — только если запускаете backend без Docker-образа
+- Flutter 3.44.4 — [`mobile/.fvmrc`](mobile/.fvmrc)
+- Node.js 20+ — lint OpenAPI (`01-analysis/api`)
+
+### 2. Переменные окружения
 
 ```bash
-# 1. Переменные окружения
 cp .env.example .env
+```
 
-# 2. PostgreSQL + API
-docker compose up -d
+Windows PowerShell:
 
-# 3. Проверка
+```powershell
+Copy-Item .env.example .env
+```
+
+### 3. Backend (PostgreSQL + API)
+
+```bash
+docker compose up -d --build
 curl http://localhost:8080/health
 ```
 
-Только база данных (без сборки API):
+Ожидаемый ответ: `{"status":"UP",...}`.
+
+**OTP в docker/dev:** код **`1234`** (фиксированный генератор в профиле `docker`).
+
+Swagger UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+Только БД (API через Gradle локально):
 
 ```bash
 docker compose up -d postgres
-```
-
-Локальный запуск backend без Docker-образа:
-
-```bash
 cd backend
 ./gradlew bootRun          # Linux/macOS
 .\gradlew.bat bootRun      # Windows
 ```
 
+### 4. Mobile
+
+```bash
+cd mobile
+flutter pub get
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080/v1
+```
+
+| Платформа | `API_BASE_URL` |
+|-----------|----------------|
+| Android Emulator | `http://10.0.2.2:8080/v1` |
+| iOS Simulator | `http://localhost:8080/v1` |
+| Физическое устройство | `http://<IP-PC>:8080/v1` |
+
+### 5. Проверка сценария (E2E smoke)
+
+```powershell
+# Windows — из корня репо
+.\scripts\e2e-smoke.ps1
+```
+
+```bash
+# Linux / macOS
+./scripts/e2e-smoke.sh
+```
+
+Сценарий: auth → list slots → book → list bookings → cancel.
+
+---
+
+## Тесты и качество
+
+```bash
+# OpenAPI lint (01-analysis)
+npm --prefix 01-analysis/api install
+npm --prefix 01-analysis/api run lint
+
+# Backend (Testcontainers + OpenApiContractTest)
+cd backend && ./gradlew test
+
+# Mobile
+cd mobile && flutter analyze && flutter test
+```
+
+Ручной прогон UC: [`02-development/QA_UC_CHECKLIST.md`](02-development/QA_UC_CHECKLIST.md)
+
+---
+
+## Структура репозитория
+
+```
+01-analysis/          ТЗ, use cases, OpenAPI-контракты
+02-development/       Чеклист, QA
+backend/              REST API `/v1/*`
+mobile/               Flutter-клиент
+docker-compose.yml    PostgreSQL + API
+scripts/              e2e-smoke.ps1 / .sh
+docs/github-setup.md  Remote GitHub
+```
+
+---
+
 ## GitHub
 
 - Репозиторий: [github.com/Iren0708/SurfProjctClimbing](https://github.com/Iren0708/SurfProjctClimbing)
-- Remote: `github` → `https://github.com/Iren0708/SurfProjctClimbing.git`
-- `origin` → GitLab (сохранён). Подробнее: **[docs/github-setup.md](docs/github-setup.md)**
+- CI: [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — backend, mobile, Docker, OpenAPI lint
 
-CI (GitHub Actions): `.github/workflows/ci.yml` — сборка backend + Docker-образ при push/PR.
-
-## Структура
-
-```
-01-analysis/     документация, ТЗ, OpenAPI
-backend/         Spring Boot API
-mobile/          Flutter (будет добавлен)
-docker-compose.yml
-```
+---
 
 ## Разработка с AI
 
-- Правила агента: `.cursor/rules/`
-- Журнал промптов: [РазработкаПромты.md](РазработкаПромты.md)
+- Правила: [`.cursor/rules/`](.cursor/rules/), [`AGENTS.md`](AGENTS.md)
+- Журнал промптов: [`РазработкаПромты.md`](РазработкаПромты.md)
+- Стек и контекст: [`AnalyzePromts.md`](AnalyzePromts.md)

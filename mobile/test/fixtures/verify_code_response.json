@@ -1,0 +1,14 @@
+{
+  "tokens": {
+    "access_token": "access-jwt",
+    "refresh_token": "refresh-token",
+    "token_type": "Bearer",
+    "expires_in": 900
+  },
+  "client": {
+    "id": "cccccccc-cccc-cccc-cccc-cccccccccccc",
+    "phone": "+79991234567",
+    "created_at": "2026-07-06T10:00:00Z"
+  },
+  "is_new": true
+}

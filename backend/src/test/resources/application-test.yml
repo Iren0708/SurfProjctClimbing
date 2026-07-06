@@ -1,0 +1,21 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
+vertical:
+  jwt:
+    secret: test-jwt-secret-at-least-32-characters-long
+    access-token-ttl-seconds: 900
+    refresh-token-ttl-seconds: 2592000
+  otp:
+    ttl-seconds: 300
+    resend-after-seconds: 60
