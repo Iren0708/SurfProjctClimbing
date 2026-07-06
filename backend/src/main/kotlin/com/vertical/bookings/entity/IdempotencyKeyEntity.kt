@@ -4,6 +4,8 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import java.time.Instant
 import java.util.UUID
 
@@ -20,7 +22,8 @@ class IdempotencyKeyEntity(
     val requestHash: String,
     @Column(name = "response_status")
     var responseStatus: Int? = null,
-    @Column(name = "response_body", columnDefinition = "TEXT")
+    @Column(name = "response_body", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     var responseBody: String? = null,
     @Column(name = "created_at", nullable = false)
     val createdAt: Instant,
