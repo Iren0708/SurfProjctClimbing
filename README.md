@@ -1,4 +1,4 @@
-# Summer School 2026 — «Вертикаль»
+# Summer School 2026 — «Вертикаль» (SurfProjctClimbing)
 
 Monorepo: аналитика (`01-analysis/`), backend (Spring Boot + Kotlin), mobile (Flutter).
 
