@@ -1,16 +1,16 @@
 openapi: 3.0.3
 
 info:
-  title: Сапбординг-клуб API — Profile
+  title: Скалодром «Вертикаль» API — Profile
   description: >-
     Профиль клиента: просмотр, смена имени, смена телефона по коду из SMS,
-    удаление аккаунта. Часть клиентского API сервиса записи на сапбординг-прогулки.
+    удаление аккаунта. Часть клиентского API записи на групповые тренировки.
   version: 1.0.0
 
 servers:
-  - url: https://api.supclub.example/v1
+  - url: https://api.vertical-gym.example/v1
     description: Production — продакшен-окружение
-  - url: https://staging-api.supclub.example/v1
+  - url: https://staging-api.vertical-gym.example/v1
     description: Staging — тестовое окружение
 
 tags:
@@ -27,7 +27,7 @@ paths:
         - Profile
       summary: Получить профиль
       operationId: getProfile
-      description: Данные текущего клиента (только свои, NFR-12).
+      description: Данные текущего клиента (только свои, NFR-9).
       responses:
         '200':
           description: Профиль клиента
@@ -70,11 +70,11 @@ paths:
       summary: Удалить аккаунт
       operationId: deleteAccount
       description: >-
-        Удаление аккаунта и персональных данных клиента (обработка ПДн, NFR-11/NFR-12;
-        SCR-007 §6.3, AC-008; R-009/R-017). Последствия:
+        Удаление аккаунта и персональных данных клиента (обработка ПДн, NFR-10/NFR-9;
+        SCR-007). Последствия:
 
         - активные брони (status=active) аннулируются и освобождают места и прокатные
-          доски в своих слотах;
+          комплекты снаряжения в своих слотах;
 
         - прошедшие/завершённые брони анонимизируются (обезличиваются от ПДн), но
           сохраняются для учёта/статистики клуба;

@@ -1,0 +1,41 @@
+---
+description: Модули и слои Flutter mobile
+globs: mobile/**/*
+alwaysApply: false
+---
+
+# Mobile — модульная структура
+
+```
+mobile/lib/
+├── main.dart
+├── app/                 # MaterialApp, go_router, theme (00-foundations)
+├── core/
+│   ├── api/             # dio, interceptors, generated OpenAPI client
+│   ├── storage/         # secure token storage
+│   ├── config/          # baseUrl, env
+│   └── widgets/         # loading, error, empty states (LOGIC-008)
+├── features/
+│   ├── auth/            # SCR-001, LOGIC-001
+│   ├── slots/           # SCR-002, SCR-003, BS-001, LOGIC-005
+│   ├── bookings/        # SCR-004–006, BS-002, BS-003, LOGIC-003, LOGIC-004
+│   ├── profile/         # SCR-007
+│   └── notifications/   # LOGIC-007, push
+└── l10n/                # строки UI (ru)
+```
+
+## Слои внутри feature
+
+```
+presentation/   screens, widgets, riverpod providers/notifiers
+domain/         models (UI), repository interfaces
+data/           repository impl, API mapping
+```
+
+## Правила генерации
+
+- Один экран (SCR-*) — изменения **только** в своей feature + `core/` при необходимости.
+- Bottom sheets (BS-*) — `presentation/widgets/` или `presentation/sheets/` внутри feature.
+- Переиспользуемая логика из `01-analysis/5-mobile-app-spec/09_Логики/` — `domain/` или `core/`.
+- Не дублировать API-вызовы: один repository на домен.
+- При задаче на экран — контекст: SCR-*.md + связанные LOGIC-*.md, не весь feature-list.

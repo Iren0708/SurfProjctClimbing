@@ -1,16 +1,16 @@
 openapi: 3.0.3
 
 info:
-  title: Сапбординг-клуб API — Auth
+  title: Скалодром «Вертикаль» API — Auth
   description: >-
     Аутентификация клиента по номеру телефона с подтверждением одноразовым кодом
-    (OTP). Часть клиентского API сервиса записи на сапбординг-прогулки.
+    (OTP). Часть клиентского API записи на групповые тренировки.
   version: 1.0.0
 
 servers:
-  - url: https://api.supclub.example/v1
+  - url: https://api.vertical-gym.example/v1
     description: Production — продакшен-окружение
-  - url: https://staging-api.supclub.example/v1
+  - url: https://staging-api.vertical-gym.example/v1
     description: Staging — тестовое окружение
 
 tags:
@@ -166,7 +166,7 @@ paths:
       operationId: registerPushToken
       description: >-
         Регистрирует токен push-уведомлений устройства для текущего клиента,
-        чтобы доставлять напоминания о прогулке (R-006). Повторный вызов с тем же
+        чтобы доставлять напоминания о тренировке (R-006, FR-17, FR-18). Повторный вызов с тем же
         токеном идемпотентен (обновляет привязку). Один клиент может иметь
         несколько токенов (несколько устройств).
       requestBody:

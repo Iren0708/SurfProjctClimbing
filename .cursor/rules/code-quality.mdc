@@ -1,0 +1,46 @@
+---
+description: Чистый код и архитектурные паттерны для mobile + REST API
+alwaysApply: true
+---
+
+# Качество генерируемого кода
+
+Код генерируется **чистым**, по практикам современной разработки, с паттернами, подходящими типу приложения (мобильный клиент + REST API).
+
+## Общие принципы
+
+- **Single Responsibility** — один класс/файл = одна зона ответственности.
+- **Явные имена** — без сокращений; доменные термины из ТЗ (Slot, Booking, ZoneFormat).
+- **Минимальный diff** — только то, что нужно для задачи; без «на будущее».
+- **Без мёртвого кода**, закомментированных блоков и TODO без задачи.
+- **Обработка ошибок** — явная; не глотать исключения.
+
+## Backend (Spring Boot + Kotlin)
+
+| Паттерн | Применение |
+|---------|------------|
+| **Layered Architecture** | controller → service → repository |
+| **DTO / Entity split** | JPA Entity внутри; наружу — DTO по OpenAPI |
+| **Repository** | Spring Data JPA; сложные запросы — `@Query` |
+| **Transactional Service** | `@Transactional` на write-операциях (booking, cancel) |
+| **Global Exception Handler** | `@ControllerAdvice` → коды 400/409/410/422 из контракта |
+| **Pessimistic Lock** | `createBooking` — блокировка слота |
+| **Idempotency** | заголовок `Idempotency-Key` для POST /bookings |
+
+Тесты: JUnit 5 + Testcontainers; критичные кейсы — 201/409/410 для `createBooking`.
+
+## Mobile (Flutter + Dart)
+
+| Паттерн | Применение |
+|---------|------------|
+| **Feature-first** | `lib/features/<feature>/` (data, domain, presentation) |
+| **Repository** | абстракция над API; UI не вызывает dio напрямую |
+| **State management** | riverpod: AsyncValue для loading/error/data |
+| **Screen states** | loading / error / empty / content (LOGIC-008) |
+| **Secure storage** | токены только через flutter_secure_storage |
+| **Navigation** | go_router; маршруты по SCR-* |
+
+## Контракт API
+
+- `operationId` из `01-analysis/api/` — именование методов клиента и эндпоинтов сервера.
+- Не расширять API без синхронизации OpenAPI-спеки.

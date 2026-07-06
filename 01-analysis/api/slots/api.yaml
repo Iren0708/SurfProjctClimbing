@@ -1,21 +1,21 @@
 openapi: 3.0.3
 
 info:
-  title: Сапбординг-клуб API — Slots
+  title: Скалодром «Вертикаль» API — Slots
   description: >-
     Просмотр слотов расписания (read-only проекция) с фильтрами и пагинацией.
-    Часть клиентского API сервиса записи на сапбординг-прогулки.
+    Часть клиентского API записи на групповые тренировки.
   version: 1.0.0
 
 servers:
-  - url: https://api.supclub.example/v1
+  - url: https://api.vertical-gym.example/v1
     description: Production — продакшен-окружение
-  - url: https://staging-api.supclub.example/v1
+  - url: https://staging-api.vertical-gym.example/v1
     description: Staging — тестовое окружение
 
 tags:
   - name: Slots
-    description: Слоты/расписание, read-only
+    description: Слоты/расписание тренировок, read-only
 
 security:
   - bearerAuth: []
@@ -28,10 +28,10 @@ paths:
       summary: Список слотов с фильтрами
       operationId: listSlots
       description: >-
-        Возвращает предстоящие слоты (расписание прогулок) с фильтрами и
-        пагинацией (SCR-002, BS-001). Слоты — read-only проекция. По умолчанию
-        only_available=false (показываются все, в т.ч. без мест — с пометкой
-        «Мест нет» на клиенте), R-012. Сортировка по start_at по возрастанию (R-027).
+        Возвращает предстоящие слоты (расписание тренировок) с фильтрами и
+        пагинацией (SCR-002, BS-001). Слоты — read-only проекция (NFR-2). По умолчанию
+        only_available=false (показываются все, в т.ч. без мест — с пометкой «Мест нет»
+        на клиенте). Сортировка по start_at по возрастанию.
 
 
         Дефолтный диапазон выдачи (R-027): если date_from не задан — текущий
@@ -41,7 +41,7 @@ paths:
       parameters:
         - $ref: '../common/models.yaml#/components/parameters/DateFromParam'
         - $ref: '../common/models.yaml#/components/parameters/DateToParam'
-        - $ref: '../common/models.yaml#/components/parameters/RouteTypeParam'
+        - $ref: '../common/models.yaml#/components/parameters/ZoneFormatTypeParam'
         - $ref: '../common/models.yaml#/components/parameters/InstructorIdParam'
         - $ref: '../common/models.yaml#/components/parameters/OnlyAvailableParam'
         - $ref: '../common/models.yaml#/components/parameters/LimitParam'
@@ -67,8 +67,8 @@ paths:
       summary: Карточка слота
       operationId: getSlot
       description: >-
-        Полные данные слота для карточки (SCR-003): маршрут с geometry, место
-        встречи с координатами, цены, доступность мест и прокатных досок.
+        Полные данные слота для карточки (SCR-003): зона/формат, инструктор,
+        места, прокатный фонд, цены.
       parameters:
         - $ref: '../common/models.yaml#/components/parameters/SlotIdParam'
       responses:

@@ -1,74 +1,72 @@
-# Маршрут и инструктор — справочные объекты (read-only) + список инструкторов.
+# Зона/формат тренировки и инструктор — справочные объекты (read-only).
 # Ссылки: '#/components/schemas/...' — внутри файла; '../common/...' — на сквозные объекты.
 
 components:
   schemas:
-    RouteType:
+    ZoneFormatType:
       type: string
-      description: Тип маршрута — новичковый (novice) или опытный (experienced).
+      description: Тип тренировки — новичковый (болдеринг) или опытный (трассы).
       enum:
         - novice
         - experienced
 
-    Geometry:
-      description: Геометрия маршрута для отрисовки линии на карте Яндекс.
-      oneOf:
-        - type: array
-          description: Массив координат точек маршрута.
-          items:
-            type: array
-            description: Координата в виде пары [lat, lng].
-            minItems: 2
-            maxItems: 2
-            items:
-              type: number
-        - type: string
-          description: Закодированная полилиния (encoded polyline).
-
-    Route:
+    ZoneFormat:
       type: object
-      description: Маршрут прогулки. Справочник, доступен только для чтения.
+      description: >-
+        Зона / формат групповой тренировки. Справочник, доступен только для чтения
+        (NFR-2). В слоте вложен как zone_format.
       required:
         - id
         - name
         - type
         - capacity_cap
         - duration_min
-        - geometry
       properties:
         id:
           type: string
           format: uuid
-          description: Идентификатор маршрута.
+          description: Идентификатор зоны/формата.
         name:
           type: string
-          description: Название маршрута.
-          example: Острова и каналы
+          description: Название зоны/формата.
+          example: Болдеринг с инструктажем
         description:
           type: string
           nullable: true
           description: >-
-            Описательный текст маршрута/прогулки для карточки слота (SCR-003, RR-D07).
-            Опционально; может отсутствовать или быть null.
+            Описательный текст для карточки слота (SCR-003). Опционально; может
+            отсутствовать или быть null.
           example: >-
-            Спокойная прогулка по тихим каналам и протокам между островами — отлично
-            подойдёт новичкам.
+            Групповое занятие на болдеринговой стене с разбором техники для новичков.
         type:
-          $ref: '#/components/schemas/RouteType'
+          $ref: '#/components/schemas/ZoneFormatType'
         capacity_cap:
           type: integer
-          description: Потолок числа мест на маршруте. Новичковый — не более 8, опытный — не более 12.
+          description: Потолок числа мест. Новичковый — не более 8, опытный — не более 16.
           example: 8
         duration_min:
           type: integer
-          description: Продолжительность прогулки в минутах (обычно 90-120).
+          description: Продолжительность тренировки в минутах (обычно ≈ 90).
           example: 90
-        geometry:
-          $ref: '#/components/schemas/Geometry'
+
+    ZoneFormatListResponse:
+      type: object
+      description: Постраничный список зон/форматов (справочник).
+      required:
+        - items
+        - meta
+      properties:
+        items:
+          type: array
+          description: Элементы справочника зон/форматов.
+          items:
+            $ref: '#/components/schemas/ZoneFormat'
+        meta:
+          $ref: '../common/models.yaml#/components/schemas/PaginationMeta'
 
     Instructor:
       type: object
-      description: Инструктор, ведущий прогулку.
+      description: Инструктор, ведущий тренировку. В слоте вложен как instructor_info (NFR-4).
       required:
         - id
         - name
@@ -80,7 +78,7 @@ components:
         name:
           type: string
           description: Имя инструктора.
-          example: Мария
+          example: Анна
 
     InstructorListResponse:
       type: object

@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: vertical-api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vertical
+    username: vertical
+    password: vertical
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

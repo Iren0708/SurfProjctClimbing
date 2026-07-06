@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/vertical}
+    username: ${SPRING_DATASOURCE_USERNAME:vertical}
+    password: ${SPRING_DATASOURCE_PASSWORD:vertical}

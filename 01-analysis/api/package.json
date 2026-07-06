@@ -1,8 +1,8 @@
 {
-  "name": "supclub-api-docs",
+  "name": "vertical-gym-api-docs",
   "version": "1.0.0",
   "private": true,
-  "description": "Клиентское API сервиса записи на сапбординг-прогулки (мульти-файловый OpenAPI)",
+  "description": "Клиентское API скалодрома «Вертикаль» — запись на групповые тренировки (мульти-файловый OpenAPI)",
   "scripts": {
     "lint": "redocly lint",
     "preview": "redocly preview-docs",

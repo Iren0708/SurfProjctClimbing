@@ -1,0 +1,44 @@
+---
+description: Пакеты и слои Spring Boot backend
+globs: backend/**/*
+alwaysApply: false
+---
+
+# Backend — модульная структура
+
+Базовый пакет: `com.vertical` (или `ru.vertical.gym`).
+
+```
+backend/src/main/kotlin/com/vertical/
+├── VerticalApplication.kt
+├── config/              # Security, OpenAPI, Jackson
+├── common/              # exceptions, ErrorResponse, pagination
+├── auth/                # OTP, JWT, push-tokens
+│   ├── api/             # AuthController
+│   ├── service/
+│   ├── repository/
+│   └── dto/
+├── profile/
+├── slots/
+├── bookings/            # ← ядро: createBooking, cancelBooking
+├── instructors/
+└── push/                # @Scheduled, Firebase
+```
+
+## Слои внутри модуля
+
+```
+api/          @RestController — только HTTP, валидация входа
+service/      бизнес-логика, @Transactional
+repository/   JpaRepository + custom queries
+entity/       @Entity (JPA)
+dto/          request/response по OpenAPI
+mapper/       Entity ↔ DTO (MapStruct или extension functions)
+```
+
+## Правила генерации
+
+- Новый эндпоинт — **только в своём модуле**; cross-module через service injection.
+- Flyway: `src/main/resources/db/migration/V*.sql`.
+- Миграции и seed — отдельные файлы; не смешивать с Kotlin-кодом.
+- При задаче на модуль — читать только его пакет + `01-analysis/api/<domain>/`.

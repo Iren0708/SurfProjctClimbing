@@ -1,0 +1,53 @@
+---
+description: Monorepo, модули и минимальный контекст для генерации
+alwaysApply: true
+---
+
+# Структура репозитория
+
+```
+summer-school-2026/
+├── 01-analysis/          # Только документация и контракты — код НЕ писать
+├── backend/              # Spring Boot (Kotlin)
+├── mobile/               # Flutter (Dart)
+├── AnalyzePromts.md      # Аналитика + стек
+└── РазработкаПромты.md   # Журнал промптов разработки
+```
+
+## Правило модульности
+
+- Код делится на **логические пакеты (модули)** по доменам API и фичам UI.
+- **Одна задача = один модуль.** Не генерировать код сразу во всём репо.
+- **Не прикладывать весь репозиторий.** Контекст — только модуль + его контракт из `01-analysis/`.
+
+## Карта модулей → минимальный контекст (@)
+
+| Модуль | Путь кода | Прикреплять (@) |
+|--------|-----------|-----------------|
+| auth | `backend/.../auth`, `mobile/lib/features/auth` | `01-analysis/api/auth/`, `5-mobile-app-spec/09_Логики/LOGIC-001_*`, `SCR-001` |
+| profile | `.../profile`, `mobile/.../profile` | `01-analysis/api/profile/`, `SCR-007` |
+| slots | `.../slots`, `mobile/.../slots` | `01-analysis/api/slots/`, `SCR-002`, `SCR-003`, `BS-001`, `LOGIC-005` |
+| bookings | `.../bookings`, `mobile/.../bookings` | `01-analysis/api/bookings/`, `4-design/api-sequence.md`, `SCR-004`–`006`, `BS-002`, `BS-003`, `LOGIC-003`, `LOGIC-004` |
+| instructors | `.../instructors` | `01-analysis/api/instructors/` |
+| push | `.../push`, `mobile/.../notifications` | `01-analysis/api/auth/` (push-tokens), `LOGIC-007` |
+| shared/core | `.../common`, `mobile/lib/core` | `01-analysis/api/common/`, `4-design/data-model.md` |
+
+## Сквозные задачи
+
+Инициализация проекта, docker-compose, CI, миграции БД — отдельная задача; контекст: `AnalyzePromts.md` (стек) + `4-design/data-model.md`.
+
+## Инфраструктура
+
+| Артефакт | Назначение |
+|----------|------------|
+| `docker-compose.yml` | PostgreSQL + API (локально) |
+| `.env.example` | шаблон переменных → скопировать в `.env` |
+| `backend/Dockerfile` | образ Spring Boot API |
+| `.github/workflows/ci.yml` | CI на GitHub (build + Docker) |
+| `docs/github-setup.md` | подключение remote `github` |
+
+## Запреты
+
+- Не менять `01-analysis/` при генерации кода (только по явному запросу).
+- Не смешивать слои: Controller/UI не содержит бизнес-логику; Entity не уходит в API-ответ напрямую.
+- Не добавлять фичи вне `functional-requirements.md` (Won't / Phase 2).

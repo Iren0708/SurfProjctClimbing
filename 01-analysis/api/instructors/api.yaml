@@ -1,19 +1,21 @@
 openapi: 3.0.3
 
 info:
-  title: Сапбординг-клуб API — Instructors
+  title: Скалодром «Вертикаль» API — Справочники
   description: >-
-    Справочник инструкторов (read-only) для фильтра по инструктору. Часть
-    клиентского API сервиса записи на сапбординг-прогулки.
+    Справочники зон/форматов тренировок и инструкторов (read-only) для фильтрации
+    слотов. Часть клиентского API записи на групповые тренировки.
   version: 1.0.0
 
 servers:
-  - url: https://api.supclub.example/v1
+  - url: https://api.vertical-gym.example/v1
     description: Production — продакшен-окружение
-  - url: https://staging-api.supclub.example/v1
+  - url: https://staging-api.vertical-gym.example/v1
     description: Staging — тестовое окружение
 
 tags:
+  - name: ZoneFormats
+    description: Справочник зон/форматов тренировок
   - name: Instructors
     description: Справочник инструкторов
 
@@ -21,6 +23,30 @@ security:
   - bearerAuth: []
 
 paths:
+  /zone-formats:
+    get:
+      tags:
+        - ZoneFormats
+      summary: Справочник зон/форматов
+      operationId: listZoneFormats
+      description: >-
+        Список зон и форматов тренировок (болдеринг, трассы и т.д.). Read-only
+        справочник из существующей инфраструктуры (NFR-2, NFR-4).
+      parameters:
+        - $ref: '../common/models.yaml#/components/parameters/LimitParam'
+        - $ref: '../common/models.yaml#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Список зон/форматов
+          content:
+            application/json:
+              schema:
+                $ref: './models.yaml#/components/schemas/ZoneFormatListResponse'
+        '401':
+          $ref: '../common/models.yaml#/components/responses/Unauthorized'
+        default:
+          $ref: '../common/models.yaml#/components/responses/InternalError'
+
   /instructors:
     get:
       tags:
